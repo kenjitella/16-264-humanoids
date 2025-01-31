@@ -5,10 +5,9 @@ def main():
     face_cascade = cv2.CascadeClassifier('./opencv_things/haarcascade_frontalface_default.xml')
     eye_cascade = cv2.CascadeClassifier('./opencv_things/haarcascade_eye.xml')
     cap = cv2.VideoCapture(0)
-    
     focal_length = 1000
-    
-    eye_dist = 2.5
+    print("what is the distance between your eyes in inches?")
+    input() = 2.5
 
     while True:
         ret, frame = cap.read()
@@ -46,7 +45,8 @@ def main():
                 eye1_center_y = y + ey1 + eh1 // 2
                 eye2_center_x = x + ex2 + ew2 // 2
                 eye2_center_y = y + ey2 + eh2 // 2
-                
+                cv2.circle(frame, (eye1_center_x, eye1_center_y), 5, (0, 255, 0), -1)
+                cv2.circle(frame, (eye2_center_x, eye2_center_y), 5, (0, 255, 0), -1)
                 between_eyes_pixels = math.dist(
                     (eye1_center_x, eye1_center_y), 
                     (eye2_center_x, eye2_center_y)
@@ -55,7 +55,12 @@ def main():
                 if between_eyes_pixels != 0:
                     distance_in_inches = (focal_length * eye_dist) / between_eyes_pixels
                     print(f"Estimated distance to camera: {distance_in_inches} inches")
-
+                    
+                    cv2.putText(frame, f"Distance: {distance_in_inches:.2f} inches", (50, 50),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+                    
+                    
+        cv2.imshow('Face detection', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()
